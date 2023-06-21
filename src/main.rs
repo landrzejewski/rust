@@ -1,79 +1,108 @@
-/* Ownership
+/* Structs
 
- - zapewnia bezpieczeństwo (brak nieprzewidywalnych zachowań) dla programów pisanych w Rust https://doc.rust-lang.org/reference/behavior-considered-undefined.html
- - Rust nie pozwala na manualne zarządzanie pamięcią sterty - dzieje się to automatycznie (poziom kompilacji, brak garbage collectora)
- - Zasady:
-   - wszystkie dane na stercie mogą mieć tylko jednego właściciela
-   - kiedy właściciel przestaje być dostępny (zakończenie zasięgu w którym był zdefiniowany), Rust zwalnia powiązaną z nim pamięć na stercie
-   - własność pamięci może zostać przeniesiona w momencie przypisania do innej zmiennej lub wywołania funkcji
-   - dostęp do pamięci na stercie może się odbywać wyłącznie za pośrednictwem aktualnego właściciela
+ - grupują elementy dowolnego typy, ale w przeciwieństwie do krotek, pozwalają na ich nazwanie
+ - pozwalają na stworzenie wielu instancji mających takie same właściwości (odpowiednik obiektów z innych języków)
+ - dostęp do elementów struktury odbywa się za pomocą operatora .
+ - jeśli instancja jest mutowalna można modyfikować jej pola
  */
 
 fn main() {
-    let x = 5; // 1
-    let result = add_one(x); // 3
-    println!("Result: {result}");
+    let mut account = Account {
+        email: String::from("jan@training.pl"), // dzięki użyciu String::from struktura posiada indywidualną kopię tekstu
+        password: String::from("123"),
+        active: true
+    };
+    println!("{:?}", account);
+    account.active = false;
+    println!("{:?}", account);
 
-    /* Zmienne proste/prymitywne istnieją w ramach ramek ułożonych na stosie (powiązanych z daną funkcją),
-     a w momencie przekazania do funkcji lub przypisania do innej zmiennej ich wartości są kopiowane
+    let other_account = Account {
+        email: String::from("marek@training.pl"),
+        ..account // skopiowanie pozostałych pól (odbywa się z przeniesieniem własności)
+    };
+    println!("Other account: {:?}", other_account);
 
-      - dla ramki main i pozycji 1 istnieje zmienna x = 5
-      - dla ramki add_one i pozycji 2 istnieje zmienna value = 5
-      - dla ramki main i pozycji 3 istnieją zmienne x = 5 i result = 6
+    // println!("{:?}", account.password); // błąd - po skopiowaniu elementów do other_account straciliśmy częściowo własność (typy referencyjne)
+    // println!("{:?}", account); // błąd - po skopiowaniu elementów do other_account straciliśmy częściowo własność (typy referencyjne)
 
-     W przypadku typów złożonych, alokowanych na stercie, posługujemy się wskaźnikiem (trzymanym na stosie),
-     dzięki temu możliwe jest współdzielenie wartości zmiennej bez konieczności jej kopiowania
-     Dealokacja pamięci odbywa się automatycznie w momencie niszczenia ramki właściciela
-    */
+    // Borrow checker śledzi własność i uprawnienia zarówno na poziomie samej struktury jak i jej pól https://rust-book.cs.brown.edu/ch05-01-defining-structs.html#borrowing-fields-of-a-struct
+    // Structs i ownership https://rust-book.cs.brown.edu/ch05-03-method-syntax.html#methods-and-ownership
 
-    let numbers = Box::new([1, 2, 3]);
-    let my_numbers = numbers; // W pamięci znajduje się jedna tablica i dwa wskaźniki,
+    // Struktury podobnie jak Traits i Enums pozwalają na definiowanie metod. W takim przypadku ich pierwszym parametrem jest zawsze &self (instancja struktury)
 
-    // println!("My numbers: {:?}", numbers); // błąd kompilacji własność zostaje przeniesiona na poziom my_numbers
-    println!("My numbers: {:?}", my_numbers);
+    let rectangle = Rectangle {
+        width: 30,
+        height: 50
+    };
 
-    let first_name = String::from("Jan");
-    // say_hello(first_name);
-    // let first_name = other_say_hello(first_name);
+    println!("The area of the rectangle is {} square pixels.", rectangle.area()); // == Rectangle::area(&rectangle);
 
-    // Alternatywą jest wykorzystanie referencji (specjalny typ wskaźnika) i użyczanie/pożyczanie własności
-    better_say_hello(&first_name);
-    println!("First name: {:?}", first_name);
+    let square = Rectangle::square(60);
 
-    /* Dereferencja
-       - może się odbywać manualnie z użyciem *
-       - może się odbywać automatycznie - użycie operatora . oraz makra
-    */
-    let mut x = Box::new(1);
-    let a = *x; // *x odczytuje wartość ze sterty czyli 1
-    *x += 1;
+    // Rust pozwala na zdefiniowanie tzw. tuple structs (nazwanych krotek) oraz pustych struktur (pod kątem Traits)
 
-    /*
-    Istnieje stosunkowo dużo zagrożeń wynikających z użycia wielu referencji np.
-    (dealokacja lub mutacja pamięci z poziomu innej referencji co może być dla nas zaskoczeniem, próba jednoczesnej mutacji z poziomu wielu referencji)
-    Rust narzuca pewne reguły, które mają zapobiegać sytuacjom potencjalnie niebezpiecznym.
-    https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html#references-change-permissions-on-paths
-    */
+    /*let origin = Point(0, 0);
+    let x = origin.0;*/
 
-    let mut values: Vec<i32> = vec![1, 2, 3];
-    let value: &i32 = &values[2];
-    println!("Value: {}", value);
-    values.push(4);
+    // Destrukcja struktury
+
+    let point = Point { x: 0, y: 7 };
+    let Point { x: a, y: b } = point;
+    let Point { x, y } = point;
+    println!("a, b: {}, {}", a, b);
+    println!("x, y: {}, {}", a, b);
+
+    match point {
+        Point { x, y: 0 } => println!("On the x axis at {}", x),
+        Point { x: 0, y } => println!("On the y axis at {}", y),
+        Point { x, y } => println!("On neither axis: ({}, {})", x, y),
+    }
+
+    match point {
+        Point { x, .. } => println!("x is {}", x),  // ignorowanie pozostałych elementów struktury
+    }
 }
 
-fn add_one(value: i32) -> i32 {
-    value + 1 // 2
+
+#[derive(Debug)]
+struct Account {
+    active: bool,
+    email: String,
+    password: String
 }
 
-fn say_hello(name: String) {
-    println!("Hello {name}");
+// struct Point(i32, i32);
+
+struct Point {
+    x: i32,
+    y: i32,
 }
 
-fn other_say_hello(name: String) -> String {
-    println!("Hello {name}");
-    name
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32
 }
 
-fn better_say_hello(name: &String) {
-    println!("Hello {name}"); // następuje niejawna dereferencja
+impl Rectangle {
+    fn area(&self) -> u32 {  // &self to skrót self: &Self lub self: &Rectangle
+        self.width * self.height
+    }
+
+    fn width(&self) -> u32 {  // można rozdzielić metody na wiele bloków impl
+        self.width
+    }
+
+    fn square(size: u32) -> Self { // Associated function, często używana do tworzenia nowych instancji, jak String::new, String::from
+        Self {  // W tym przypadku Self to alias do Rectangle
+            width: size,
+            height: size,
+        }
+    }
+}
+
+impl Rectangle {
+    fn is_bigger(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
 }
