@@ -11,3 +11,5 @@
 * Gracze zajmują na przemian wolne pola, stawiając na nich swój znak (kółko lub krzyżyk)
 * Gra kończy się, kiedy wszystkie pola zostaną zajęte lub jeden z graczy zajmie sekwencję wygrywającą (kolumna, wiersz lub przekątna)
 * Interfejs gry powinien opierać się linię komend / terminal
+
+4. Zaimplementuj uproszczone wersje narzędzi z powłoki: cat, tail, ls, tree, find, grep
