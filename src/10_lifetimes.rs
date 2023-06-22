@@ -27,13 +27,13 @@ fn main() {
   - dla metod z argumentami, które zawierają &self lub &mut self to wtedy lifetime przypisany do atrybutu  &self lub &mut self jest przypisany do rezultaty
  */
 
-fn get_longer<'a>(text: &'a str, other_text: &'a str) -> &'a str {
+fn get_longer<'a>(text: &'a str, other_text: &'a str) -> &'a str { // w tym przypadku zwracana referencja musi być ważna tak długo jak referencje przekazywanych argumentów
     if text.len() >= other_text.len() { text } else { other_text }
 }
 
-struct Person<'a, T> {
+struct Person<'a, T> {  // instancja Person nie może przetrwać dłużej niż referencje, które posiada / przechowuje
     first_name: &'a str,
-    last_name: &'static str,
+    last_name: &'static str, // static oznacza czas życia całego programu
     address: T
 }
 
