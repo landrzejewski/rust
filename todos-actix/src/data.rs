@@ -7,8 +7,8 @@ pub struct Todo {
     pub id: Option<String>,
     pub title: String,
     pub description: String,
-    pub completed: bool,
-    pub due_date_time: DateTime<Utc>
+    pub completed: Option<bool>,
+    pub create_time: Option<DateTime<Utc>>
 }
 
 pub struct AppState {
@@ -21,4 +21,9 @@ impl AppState {
             todos: Arc::new(Mutex::new(Vec::new()))
         }
     }
+}
+
+#[derive(Deserialize)]
+pub struct QueryOptions {
+    pub completed: bool
 }
