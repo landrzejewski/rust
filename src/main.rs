@@ -19,9 +19,15 @@ cargo fmt                              # format source files in the project
 cargo clippy                           # lint project
 cargo clean                            # clean project
 */
+
+mod exercises;
+
 use std::sync::atomic::{AtomicI32, Ordering};
+use exercises::fibonacci;
 
 fn main() {
+    fibonacci::run();
+
     println!("Hello, world!");
 }
 
@@ -488,6 +494,322 @@ fn validate<T>(value: T, predicate: fn(T) -> bool) -> bool {
 
 fn is_even(value: i32) -> bool {
     value % 2 == 0
+}
+
+/*
+Structs
+- group elements of any type, but unlike tuples, allow them to be named
+- allow you to create multiple instances having the same properties (like object instances from other languages)
+- structure elements are accessed using the dot operator
+- if the structure instance is mutable it is possible to modify its fields
+ */
+#[allow(unused_variables)]
+fn structs() {
+    let origin = Point(0, 0);
+    let x = origin.0;
+
+    let point = Point3d { x: 2, y: 2, z: 2 };
+    let y = point.y;
+
+    let Point3d { x, y, z } = point;
+    println!("x, y, z: {x}, {y}. {z}");
+
+    let Point3d { x: a, y: b, z: c } = point;
+    println!("x, y, z: {a}, {b}. {c}");
+
+    let Point3d { x: aa, .. } = point;
+
+    let active = true;
+
+    let mut account = Account {
+        email: "john@training.pl".to_string(),
+        password: String::from("123"),
+        active, // shortcut for active: active
+    };
+
+    println!("{:#?}", account);
+    account.active = false;
+    println!("{:#?}", account);
+
+    let other_account = Account {
+        email: String::from("marek@training.pl"),
+        ..account.clone()
+    };
+
+    println!("Other account: {:#?}", other_account);
+    println!("{:?}", account.email);
+    // println!("{:?}", account.password); // error - after copying elements to other_account, we partially lost ownership (reference types)
+    // println!("{:?}", account); // error - after copying elements to other_account, we partially lost ownership (reference types)
+
+    match point {
+        Point3d { x: 0, y, z } => println!("On the x axis at {}", x),
+        Point3d { x, y: 0, z } => println!("On the y axis at {}", y),
+        Point3d { x, y, z } => println!("On neither axis: ({}, {})", x, y),
+    }
+
+    match point {
+        Point3d { x, .. } => println!("x is {}", x), // ignoring other elements of the structure
+    }
+
+    let rectangle = Rectangle {
+        width: 100,
+        height: 50,
+    };
+    println!("Rectangle area: {}", rectangle.area()); // == Rectangle::area(&rectangle);
+
+    let square = Rectangle::square(10);
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        square.area()
+    ); // == Rectangle::area(&rectangle);
+}
+
+// unit struct
+struct Directory;
+
+// tuple struct/named tuple
+struct Point(i32, i32);
+
+struct Point3d {
+    x: i32,
+    y: i32,
+    z: i32,
+}
+
+#[derive(Debug, Clone)]
+struct Account {
+    active: bool,
+    email: String,
+    password: String,
+}
+
+#[derive(Debug, Clone)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    const DEFAULT_SIZE: u32 = 100;
+
+    fn area(&self) -> u32 {
+        //  &self is an abbreviation of self: &Self or self: &Rectangle
+        self.width * self.height
+    }
+
+    fn resize(&mut self, by: u32) {
+        self.height = self.height * by;
+        self.width = self.width * by;
+    }
+
+    fn is_bigger(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+
+    fn new(width: u32, height: u32) -> Self {
+        Self { width, height }
+    }
+
+    fn square(size: u32) -> Self {
+        // associated function (like static functions in other languages), often used to create new instances, such as String::new, String::from
+        Self {
+            // in this case Self is an alias for Rectangle
+            width: size,
+            height: size,
+        }
+    }
+
+    fn square_with_default_size() -> Self {
+        Rectangle::square(Self::DEFAULT_SIZE)
+    }
+}
+
+impl Rectangle {
+    fn width(&self) -> u32 {
+        // methods can be split into multiple impl blocks
+        self.width
+    }
+}
+
+/*
+Enums
+- represent the enumeration of fixed/possible variants
+- allow to define methods/behaviors (the same as for structures)
+*/
+#[allow(unused_variables)]
+fn enums() -> Result<(), String> {
+    let qr_code: Barcode = Barcode::Qr(String::from("345345345345"));
+
+    let product_code = Barcode::Product {
+        id: 5,
+        value: String::from("123"),
+    };
+
+    println!("{}", size_of_val(&qr_code));
+    println!("{}", size_of_val(&product_code));
+    println!("{}", size_of_val(&Barcode::Other));
+    // let a  = [qr_code, product_code, Barcode::Other];
+
+    // println!("Value: {}", Values::from_i32(17));
+
+    // destructuring of enumeration elements
+
+    match qr_code {
+        Barcode::Other => println!("Other barcode"),
+        Barcode::Product { value, id } => println!("Product {id}:{value} "),
+        Barcode::Qr(value) => println!("Qr {value} "),
+        _ => (),
+    }
+
+    match product_code {
+        Barcode::Product {
+            id: id_value @ 4..=10,
+            value: _,
+        } => println!("Id in big range {id_value}"), // bind values in range
+        Barcode::Product {
+            id: 1..=3,
+            value: _,
+        } => println!("Id in small range"),
+        _ => {}
+    }
+
+    /* one of the built-in enumeration types is Option representing a value or the absence of a value (alternative to null)
+
+    enum Option<T> {
+        None,
+        Some(T),
+    }
+    */
+
+    let _result = safe_div(3.0, 3.0).expect("Division by 0"); //.unwrap();
+
+    let val = safe_div(3.0, 3.0).unwrap_or(0.0);
+
+    match safe_div(3.0, 3.0) {
+        Some(value) => println!("3.0 / 3.0 = {}", value),
+        _ => (),
+    }
+
+    if let Some(value) = safe_div(3.0, 3.0) {
+        println!("3.0 / 3.0 = {}", value);
+    }
+
+    let Some(value) = safe_div(3.0, 3.0) else {
+        return Err("error".to_string());
+    };
+
+    println!("3.0 / 3.0 = {}", value);
+
+    let mut stack = vec![1, 2, 3];
+    while let Some(value) = stack.pop() {
+        println!("Value: {}", value);
+    }
+
+    /*
+     enum Result<T, E> {
+        Ok(T),
+        Err(E),
+     }
+    */
+
+    match safe_div_with_result(3.0, 3.0) {
+        Ok(value) => println!("3.0 / 3.0 = {}", value),
+        Err(message) => return Err(message),
+    }
+
+    let _result = safe_div_with_result(3.0, 3.0)?; // in case of Err return/exit function
+
+    // you can use unwrap_or() to extract Ok value from a Result, or use a fallback value if Err.
+    let parsed_value = i32::from_str_radix("FF", 16);
+    println!("Result: {}", parsed_value.unwrap_or(-1));
+
+    //safe_div_with_result(3.0, 3.0).ok();
+
+    // Option -> Result
+
+    let some_option: Option<i32> = Some(42);
+    let none_option: Option<i32> = None;
+
+    let result_some: Result<i32, &str> = some_option.ok_or("Value was None");
+    let result_none: Result<i32, &str> = none_option.ok_or("Value was None");
+
+    let result_some: Result<i32, String> = some_option.ok_or_else(|| "Value was None".to_string());
+    let result_none: Result<i32, String> = none_option.ok_or_else(|| "Value was None".to_string());
+
+    println!("{:?}", result_some); // Output: Ok(42)
+    println!("{:?}", result_none); // Output: Err("Value was None")
+
+    // Result -> Option
+
+    let success: Result<i32, &str> = Ok(42);
+    let error: Result<i32, &str> = Err("Something went wrong");
+
+    let success_option: Option<i32> = success.ok();
+    let error_option: Option<i32> = error.ok();
+
+    println!("{:?}", success_option); // Output: Some(42)
+    println!("{:?}", error_option); // Output: None
+
+    let success_error: Option<&str> = success.err();
+    let error_error: Option<&str> = error.err();
+
+    println!("{:?}", success_error); // Output: None
+    println!("{:?}", error_error); // Output: Some("Something went wrong")
+
+    Ok(())
+}
+
+fn get_first_char(input: &str) -> Option<char> {
+    let string = input.chars().nth(0)?; // If `input` is `None`, this returns `None` immediately.
+    Some(string)
+}
+
+enum Currency {
+    #[allow(dead_code)]
+    Eur,
+    Pln,
+    Gbp,
+}
+
+enum Values {
+    A = 17,
+    B = 42,
+    C,
+}
+
+struct Money {
+    value: f64,
+    currency: Currency,
+}
+
+#[derive(Debug)]
+enum Barcode {
+    Other,
+    Qr(String),
+    Upc(i32, i32, i32, i32),
+    Product { value: String, id: i64 },
+}
+
+impl Barcode {
+    fn get_info(&self) -> String {
+        format!("Barcode {:?}", self)
+    }
+}
+
+fn safe_div(value: f64, dividend: f64) -> Option<f64> {
+    if dividend == 0.0 {
+        None
+    } else {
+        Some(value / dividend)
+    }
+}
+
+fn safe_div_with_result(value: f64, dividend: f64) -> Result<f64, String> {
+    if dividend == 0.0 {
+        Err("Division by 0".to_string())
+    } else {
+        Ok(value / dividend)
+    }
 }
 
 
