@@ -19,11 +19,13 @@ cargo fmt                              # format source files in the project
 cargo clippy                           # lint project
 cargo clean                            # clean project
 */
+use crate::exercises::tic_tac_toe;
 
 mod exercises;
 mod memory_management;
 mod language_basics;
 
 fn main() {
+    tic_tac_toe::run();
 }
 
