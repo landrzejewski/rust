@@ -202,6 +202,7 @@ pub fn run() {
             break;
         }
 
+        
         game.toggle_player();
     }
 }
