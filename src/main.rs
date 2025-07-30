@@ -478,7 +478,7 @@ fn functions() {
 }
 
 fn add(value: i32, other_value: i32) -> i32 {
-    //return value + other_value; // explicit return of the function result
+    // return value + other_value; // explicit return of the function result
     value + other_value // implicit return of the function result (no semicolon at the end)
 }
 
