@@ -26,9 +26,8 @@ use std::sync::atomic::{AtomicI32, Ordering};
 use exercises::fibonacci;
 
 fn main() {
-    fibonacci::run();
-
-    println!("Hello, world!");
+    //println!("Hello, world!");
+    structs();
 }
 
 fn variable_declaration() {
@@ -505,6 +504,8 @@ Structs
  */
 #[allow(unused_variables)]
 fn structs() {
+    let d = Directory;
+
     let origin = Point(0, 0);
     let x = origin.0;
 
@@ -524,7 +525,7 @@ fn structs() {
     let mut account = Account {
         email: "john@training.pl".to_string(),
         password: String::from("123"),
-        active, // shortcut for active: active
+        active
     };
 
     println!("{:#?}", account);
@@ -765,7 +766,6 @@ fn get_first_char(input: &str) -> Option<char> {
 }
 
 enum Currency {
-    #[allow(dead_code)]
     Eur,
     Pln,
     Gbp,
