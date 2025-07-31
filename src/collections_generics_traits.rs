@@ -12,8 +12,8 @@ pub fn run() {
 fn collections() {
     // Vectors
 
-    let mut numbers = Vec::<i32>::new();
-    //let mut numbers: Vec<i32> = Vec::new();
+    //let mut numbers = Vec::<i32>::new();
+    let mut numbers: Vec<i32> = Vec::new();
 
     numbers.push(1);
     numbers.push(2);
@@ -170,12 +170,6 @@ trait Shape {
 struct Rectangle;
 
 struct Circle;
-
-impl Circle {
-    fn print_circle_info(&self) {
-        println!("Rectangle")
-    }
-}
 
 impl Shape for Rectangle {
     fn print_info(&self) {
