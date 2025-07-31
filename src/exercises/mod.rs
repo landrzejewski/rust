@@ -8,4 +8,5 @@ pub mod budget;
 pub mod echo;
 pub mod cat;
 pub mod wc;
-mod find;
+pub mod find;
+pub mod utils;

@@ -27,6 +27,6 @@ mod language_basics;
 mod collections_generics_traits;
 
 fn main() {
-    exercises::wc::run();
+    exercises::find::run();
 }
 
