@@ -196,7 +196,7 @@ fn lifetimes() {
     {
         //let s2 = String::from("a");
         //result = get_longer(&s1, &s2);
-        let s2 = "def"; // str is alive/exists for the duration of the application 
+        let s2 = "def"; // str is alive/exists for the duration of the application
         result = get_longer(s1.as_str(), s2);
     }
     println!("{}", result);
@@ -250,7 +250,7 @@ fn get_ref2<'a>(aa: &'a i32) -> &'a i32 {
 fn pointers() {
     // Box<T> object - a simple smart pointer that points to data on the heap, the Box object itself lives on the stack
     let boxed_number = Box::new(42);
-
+    
     // println!() can dereference the Box explicitly or implicitly
     println!("Explicitly dereferenced value: {}", *boxed_number);
     println!("Implicitly dereferenced value: {}", boxed_number);

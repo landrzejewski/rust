@@ -24,6 +24,7 @@ use crate::exercises::tic_tac_toe;
 mod exercises;
 mod memory_management;
 mod language_basics;
+mod collections_generics_traits;
 
 fn main() {
     tic_tac_toe::run();
