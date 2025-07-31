@@ -7,4 +7,4 @@ pub mod basic_io;
 pub mod budget;
 pub mod echo;
 pub mod cat;
-mod wc;
+pub mod wc;
