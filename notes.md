@@ -35,7 +35,7 @@
    * Oblicza:
    - całkowity przepracowany czas na pracownika
    - średnią długość dnia pracy,
-   - dni z nadgodzinami (np. >8h).
+   - dni z nadgodzinami (np. > 8h).
    * Generuje raport (`report.txt`) z wynikami
    
 ----

@@ -1,0 +1,10 @@
+Pracownik: E002
+  Całkowity czas pracy: 16h 0min
+  Średnia długość dnia pracy: 8.00h
+  Dni z nadgodzinami: ["2025-07-29"]
+
+Pracownik: E001
+  Całkowity czas pracy: 17h 30min
+  Średnia długość dnia pracy: 8.75h
+  Dni z nadgodzinami: ["2025-07-29", "2025-07-30"]
+

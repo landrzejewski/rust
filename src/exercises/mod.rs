@@ -13,3 +13,4 @@ pub mod utils;
 pub mod grep_classic;
 pub mod grep;
 pub mod iterators;
+pub mod employees;

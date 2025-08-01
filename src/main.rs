@@ -19,6 +19,7 @@ cargo fmt                              # format source files in the project
 cargo clippy                           # lint project
 cargo clean                            # clean project
 */
+use crate::exercises::employees::run;
 use crate::exercises::tic_tac_toe;
 
 mod exercises;
@@ -58,9 +59,6 @@ macro_rules! vector {
 }
 
 fn main() {
-    say_hello!();
-    greet!("Adam");
-    println!("Add {}", calc!(4, +, 3));
-    println!("Vector {:?}", vector!{1, 2, 3, 4})
+    run().unwrap();
 }
 
