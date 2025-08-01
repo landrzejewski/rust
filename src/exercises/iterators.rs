@@ -1,3 +1,6 @@
+use std::cmp::Ordering;
+use std::collections::HashMap;
+
 #[derive(Debug, Clone)]
 struct Employee {
     id: u32,
@@ -50,4 +53,86 @@ fn create_fake_employees() -> Vec<Employee> {
 
 pub fn run() {
     let employees = create_fake_employees();
+
+    /*println!("1. All employee names:");
+    employees.iter().for_each(|employee| println!("{}", employee.name));*/
+
+    /*println!("2. High earners (salary > $80,000):");
+    employees.iter()
+        .filter(|employee| employee.salary > 80_000.0)
+        .for_each(|employee| println!("{:?}", employee));*/
+
+    /*println!("3. Name and salary pairs:");
+    employees.iter()
+        .map(|employee| (employee.name.clone(), employee.salary))
+        .for_each(|entry| println!("{:?}", entry));*/
+
+    /*println!("4. First remote employee:");
+    if let Some(employee) = employees.iter().find(|employee| employee.is_remote) {
+        println!("{:?}", employee);
+    }*/
+
+    /*println!("5. Employee statistics:");
+    let min_age = employees.iter()
+        .min_by_key(|employee| employee.age)
+        .map(|employee| employee.age)
+        .unwrap_or_default();
+
+    let max_age = employees.iter()
+        .max_by_key( |employee| employee.age)
+        .map(|employee| employee.age)
+        .unwrap_or_default();
+
+    let min_salary = employees.iter()
+        .map(|employee| employee.salary)
+        //.fold(f64::INFINITY, |min_salary, salary| if salary < min_salary { salary } else { min_salary });
+        .fold(f64::INFINITY, f64::min);
+
+    let max_salary = employees.iter()
+        .map(|employee| employee.salary)
+        .fold(0.0, f64::max);
+
+    println!("Age: {:?} - {:?}:", min_age, max_age);
+    println!("Salary: {:?} - {:?}:", min_salary, max_salary);*/
+
+    /*println!("6. Average salary (using fold):");
+    let (total_salary, count) = employees.iter()
+        .fold((0.0, 0), |(sum, count), employee| (sum + employee.salary, count + 1));
+    println!("Avg salary: {:.2}", total_salary / count as f64);*/
+
+    /*println!("7. Employees by department:");
+    let employees_by_department = employees.iter()
+        .fold(HashMap::new(), |mut acc, employee| {
+            acc.entry(employee.department.clone()).or_insert(Vec::new()).push(employee);
+            acc
+        });
+    for entry in employees_by_department {
+        println!("{}", entry.0);
+        println!("{:?}", entry.1);
+    }*/
+
+    /*println!("8. Senior employees (10+ years) OR high earners (90k+):");
+    let senior_employees = employees.iter()
+        .filter(|employee| employee.years_experience >= 10);
+    let high_earners = employees.iter()
+        .filter(|employee| employee.salary >= 90_000.0);
+
+    senior_employees.chain(high_earners).for_each(|employee| println!("{:?}", employee));*/
+
+    /*println!("9. First 5 employees with index:");
+    employees.iter()
+        .enumerate()
+        .take(5)
+        .for_each(|employee| println!("{:?}", employee));*/
+
+    /*println!("10. Employee rankings by salary:");
+    let mut employees_by_salary = employees.clone();
+    employees_by_salary.sort_by(|employee, other_employee| {
+            other_employee.salary.partial_cmp(&employee.salary).unwrap_or(Ordering::Equal)
+        });
+
+    (1..=5).zip(employees_by_salary)
+        .for_each(|entry| println!("{:?}", entry));*/
+
+
 }
