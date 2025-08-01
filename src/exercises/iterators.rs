@@ -134,5 +134,42 @@ pub fn run() {
     (1..=5).zip(employees_by_salary)
         .for_each(|entry| println!("{:?}", entry));*/
 
+    /*println!("11. Remote vs Office workers:");
+    let (remote, office): (Vec<&Employee>, Vec<&Employee>) = employees.iter()
+        .partition(|employee| employee.is_remote);*/
+
+    /*println!("12. Department salary statistics:");
+
+    let process = |mut acc: HashMap<String, (f64, f64, usize)>, employee: &Employee| {
+        let entry = acc.entry(employee.department.clone()).or_insert((f64::INFINITY, 0.0, 0));
+        entry.0 = entry.0.min(employee.salary);
+        entry.1 = entry.1.max(employee.salary);
+        entry.2 += 1;
+        acc
+    };
+
+    let data = employees.iter()
+        .fold(HashMap::new(), process);
+
+    for (department, stats) in data {
+        println!("Department: {}, count: {}, salary: {} - {}", department, stats.2, stats.0, stats.1);
+    }*/
+
+   /* println!("13. Boolean checks:");
+    let all_adults = employees.iter().all(|employee| employee.age >= 18);
+    let any_remote = employees.iter().any(|employee| employee.is_remote);
+    let any_millionaire = employees.iter().any(|employee| employee.salary >= 1_000_000.0);
+
+    println!("   All employees are adults (18+): {}", all_adults);
+    println!("   Any remote workers: {}", any_remote);
+    println!("   Any millionaires: {}", any_millionaire);*/
+
+    /*println!("14. Pagination example (page 2, 5 per page):");
+    employees.iter()
+        .skip(5)  // Skip first 5 (page 1)
+        .take(5)  // Take next 5 (page 2)
+        .for_each(|employee| println!("   {} - {}", employee.name, employee.department));*/
+
+    println!("15. Complex query - Engineering dept, remote, salary > 90k, sorted by experience:");
 
 }
