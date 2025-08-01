@@ -25,8 +25,9 @@ mod exercises;
 mod memory_management;
 mod language_basics;
 mod collections_generics_traits;
+mod threads;
 
 fn main() {
-    exercises::iterators::run();
+    threads::run();
 }
 
