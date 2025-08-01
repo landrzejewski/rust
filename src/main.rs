@@ -27,7 +27,40 @@ mod language_basics;
 mod collections_generics_traits;
 mod threads;
 
+macro_rules! say_hello {
+    () => {
+        println!("Say hello!");
+    };
+}
+
+macro_rules! greet {
+    ($name:expr) => {
+        println!("Hello {}!", $name);
+    };
+}
+
+macro_rules! calc {
+    ($a:literal, +, $b:literal) => {
+        $a + $b
+    };
+}
+
+macro_rules! vector {
+    ($($x:expr), *) => {
+        {
+            let mut vec = Vec::new();
+            $(
+                vec.push($x);
+            )*
+            vec
+        }
+    };
+}
+
 fn main() {
-    threads::run();
+    say_hello!();
+    greet!("Adam");
+    println!("Add {}", calc!(4, +, 3));
+    println!("Vector {:?}", vector!{1, 2, 3, 4})
 }
 
