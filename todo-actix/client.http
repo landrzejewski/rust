@@ -1,0 +1,20 @@
+POST http://localhost:8080/api/todos
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Poznać Rusta",
+  "description": "Trudna sprawa"
+}
+
+###
+
+GET http://localhost:8080/api/todos/3d381c57-0673-49d2-b4f5-8512c3f12e25
+Accept: application/json
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/api/todos?completed=false
+Accept: application/json
+Content-Type: application/json
