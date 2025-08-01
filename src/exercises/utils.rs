@@ -12,6 +12,10 @@ pub fn assert<T>(value: T, predicate: impl Fn(T) -> bool, show_help: impl Fn()) 
     }
 }
 
+pub fn drop<T>(data: Vec<T>, count: usize) -> Vec<T> {
+    data.into_iter().skip(count).collect()
+}
+
 pub fn min_length<T>(length: usize) -> impl Fn(&Vec<T>) -> bool {
     move |values| values.len() >= length
 }
