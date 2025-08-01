@@ -10,4 +10,5 @@ pub mod cat;
 pub mod wc;
 pub mod find;
 pub mod utils;
+pub mod grep_classic;
 pub mod grep;
