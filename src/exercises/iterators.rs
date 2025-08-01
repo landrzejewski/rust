@@ -13,7 +13,15 @@ struct Employee {
 }
 
 impl Employee {
-    fn new(id: u32, name: &str, department: &str, salary: f64, age: u32, years_experience: u32, is_remote: bool) -> Self {
+    fn new(
+        id: u32,
+        name: &str,
+        department: &str,
+        salary: f64,
+        age: u32,
+        years_experience: u32,
+        is_remote: bool,
+    ) -> Self {
         Employee {
             id,
             name: name.to_string(),
@@ -155,7 +163,7 @@ pub fn run() {
         println!("Department: {}, count: {}, salary: {} - {}", department, stats.2, stats.0, stats.1);
     }*/
 
-   /* println!("13. Boolean checks:");
+    /* println!("13. Boolean checks:");
     let all_adults = employees.iter().all(|employee| employee.age >= 18);
     let any_remote = employees.iter().any(|employee| employee.is_remote);
     let any_millionaire = employees.iter().any(|employee| employee.salary >= 1_000_000.0);
@@ -171,5 +179,17 @@ pub fn run() {
         .for_each(|employee| println!("   {} - {}", employee.name, employee.department));*/
 
     println!("15. Complex query - Engineering dept, remote, salary > 90k, sorted by experience:");
+    let mut data = employees
+        .into_iter()
+        .filter(|employee| employee.department == "Engineering")
+        .filter(|employee| employee.is_remote)
+        .filter(|employee| employee.salary > 90_000.0)
+        .collect::<Vec<_>>();
+    data.sort_by(|employee, other_employee| {
+        other_employee
+            .years_experience
+            .cmp(&employee.years_experience)
+    });
 
+    data.iter().for_each(|employee| println!("{:?}", employee));
 }
