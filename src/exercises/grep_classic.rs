@@ -23,7 +23,7 @@ fn find_file_paths(path: &String) -> Vec<String> {
 
 fn get_matching_lines(text: &String, file_path: &String) -> Vec<(usize, String)> {
     let Ok(file) = File::open(file_path) else {
-        eprintln!("Unable to open file, {file_path}");
+        eprintln!("Unable to open file: {file_path}");
         return Vec::new();
     };
     let mut lines: Vec<(usize, String)> = Vec::new();
